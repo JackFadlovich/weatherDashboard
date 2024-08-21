@@ -5,3 +5,19 @@ const cityInput = document.getElementById('city-input');
 const searchHistoryContainer = document.getElementById('search-history');
 const currentDetails = document.getElementById('current-details');
 const forecastDetails = document.getElementById('forecast-details');
+let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+function getWeatherData(city) {
+    const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+
+ fetch(currentWeatherUrl)
+    .then(response => response.json())
+    .then(data => displayCurrentWeather(data))
+        .catch(error => console.error('Error fetching current data', error));
+
+fetch(forecastUrl)
+    .then(response => response.json())
+    .then(data => displayForecast(data))
+    .catch(error => console.error('Error fetching forcast data:', error));
+}
