@@ -21,3 +21,33 @@ fetch(forecastUrl)
     .then(data => displayForecast(data))
     .catch(error => console.error('Error fetching forcast data:', error));
 }
+function addToSearchHistory(city) {
+    if (!searchHistory.includes(city)) {
+        searchHistory.push(city);
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        updateSearchHistory();
+    }}
+    function addToSearchHistory(city) {
+        if (!searchHistory.includes(city)) {
+            searchHistory.push(city);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            updateSearchHistory();
+        }}
+    function updateSearchHistory() {
+        searchHistoryContainer.innerHTML = '';
+        searchHistory.forEach(city => {
+            const historyButton = document.createElement('button');
+            historyButton.textContent = city;
+            historyButton.addEventListener('click', () => getWeatherData(city));
+            searchHistoryContainer.appendChild(historyButton);
+        });}
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const city = cityInput.value.trim();
+            if (city) {
+                getWeatherData(city);
+                addToSearchHistory(city);
+                cityInput.value = '';
+            }});
+            
+updateSearchHistory();
