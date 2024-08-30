@@ -27,12 +27,6 @@ function addToSearchHistory(city) {
         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
         updateSearchHistory();
     }}
-    function addToSearchHistory(city) {
-        if (!searchHistory.includes(city)) {
-            searchHistory.push(city);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            updateSearchHistory();
-        }}
     function updateSearchHistory() {
         searchHistoryContainer.innerHTML = '';
         searchHistory.forEach(city => {
@@ -49,5 +43,37 @@ function addToSearchHistory(city) {
                 addToSearchHistory(city);
                 cityInput.value = '';
             }});
+            function displayCurrentWeather(data) {
+                const weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+                currentDetails.innerHTML = `
+                    <h3>${data.name} (${new Date().toLocaleDateString()})</h3>
+                    <img src="${weatherIcon}" alt="${data.weather[0].description}">
+                    <p>Temperature: ${data.main.temp} °C</p>
+                    <p>Humidity: ${data.main.humidity}%</p>
+                    <p>Wind Speed: ${data.wind.speed} m/s</p>
+                `;}
+            function displayForecast(data) {
+                forecastDetails.innerHTML = '';
+                const dailyData = data.list.filter(entry => entry.dt_txt.includes('12:00:00'));
+            
+                dailyData.forEach(day => {
+                    const weatherIcon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+                    const date = new Date(day.dt_txt).toLocaleDateString();
+                    const temp = day.main.temp;
+                    const humidity = day.main.humidity;
+                    const windSpeed = day.wind.speed;
+            
+                    const forecastCard = document.createElement('div');
+                    forecastCard.classList.add('forecast-card');
+                    forecastCard.innerHTML = `
+                        <h4>${date}</h4>
+                        <img src="${weatherIcon}" alt="${day.weather[0].description}">
+                        <p>Temp: ${temp} °C</p>
+                        <p>Wind: ${windSpeed} m/s</p>
+                        <p>Humidity: ${humidity}%</p>
+                    `;
+                    forecastDetails.appendChild(forecastCard);
+                });
+            }
             
 updateSearchHistory();
